@@ -1,39 +1,42 @@
 # ----------------------------------------------------
 # Etapa 1: Build (Construcción)
-# Utilizamos una imagen SDK para compilar y publicar el código
 # ----------------------------------------------------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /src
+# Usamos /source como directorio de trabajo para evitar confusiones
+WORKDIR /source
 
-# Copia los archivos de proyecto (.csproj) para restaurar dependencias
-# Esto ayuda a optimizar el caché de Docker si solo cambian los archivos .cs
-COPY src/API/API.csproj src/API/
-COPY src/Core.Application/Core.Application.csproj src/Core.Application/
-COPY src/Core.Domain/Core.Domain.csproj src/Core.Domain/
-COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
-RUN dotnet restore
+# 1. Copiar archivos de proyecto (.csproj)
+# Importante: Copiamos manteniendo la estructura de directorios, 
+# pero quitamos el primer "src/" para que en el contenedor quede más limpio.
+# Ejemplo: Host "src/API/API.csproj" -> Contenedor "/source/API/API.csproj"
 
-# Copia el resto del código fuente
-COPY . .
+COPY src/API/API.csproj API/
+COPY src/Core.Application/Core.Application.csproj Core.Application/
+COPY src/Core.Domain/Core.Domain.csproj Core.Domain/
+COPY src/Infrastructure/Infrastructure.csproj Infrastructure/
 
-# Publica la aplicación, la salida estará en /app/publish
-RUN dotnet publish -c Release -o /app/publish
+# 2. Restaurar dependencias
+# LE INDICAMOS EL PROYECTO PRINCIPAL. Al restaurar este, él sabe buscar 
+# los otros proyectos (Domain, Infra, etc) gracias a que mantuvimos la estructura de carpetas.
+RUN dotnet restore API/API.csproj
+
+# 3. Copiar el resto del código fuente
+# Copiamos todo el contenido de la carpeta 'src' del host a '/source' en el contenedor
+COPY src/ .
+
+# 4. Publicar la aplicación
+RUN dotnet publish API/API.csproj -c Release -o /app/publish
 
 # ----------------------------------------------------
 # Etapa 2: Final (Ejecución)
-# Utilizamos la imagen ASP.NET Runtime, que es mucho más ligera
 # ----------------------------------------------------
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
-# Establece el directorio de trabajo para la ejecución
 WORKDIR /app
 
 # Copia los archivos publicados desde la etapa de construcción
 COPY --from=build /app/publish .
 
-# Define el punto de entrada al iniciar el contenedor
-# El puerto 8080 es el puerto interno del contenedor
+# Define el punto de entrada
 ENTRYPOINT ["dotnet", "API.dll"]
-# IMPORTANTE: Reemplaza "TuProyecto.dll" por el nombre real de tu archivo DLL principal
