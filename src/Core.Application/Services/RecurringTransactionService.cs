@@ -41,6 +41,12 @@ namespace Core.Application.Services
                 throw new InvalidOperationException("User not found");
             }
 
+            // Ensure dates are UTC for PostgreSQL compatibility
+            var startDateUtc = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
+            var endDateUtc = request.EndDate.HasValue 
+                ? DateTime.SpecifyKind(request.EndDate.Value, DateTimeKind.Utc) 
+                : (DateTime?)null;
+
             var recurring = new RecurringTransaction(
                 userId,
                 request.Amount,
@@ -48,8 +54,8 @@ namespace Core.Application.Services
                 request.Category,
                 request.Description,
                 request.Frequency,
-                request.StartDate,
-                request.EndDate,
+                startDateUtc,
+                endDateUtc,
                 request.DayOfMonth,
                 request.DayOfWeek
             );
