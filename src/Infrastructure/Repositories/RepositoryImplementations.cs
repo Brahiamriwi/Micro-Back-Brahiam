@@ -172,66 +172,6 @@ namespace Infrastructure.Repositories
         }
     }
 
-    public class RecurringTransactionRepository : IRecurringTransactionRepository
-    {
-        private readonly ApplicationDbContext _context;
-
-        public RecurringTransactionRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<RecurringTransaction?> GetByIdAsync(Guid id)
-        {
-            return await _context.RecurringTransactions.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<RecurringTransaction>> GetByUserIdAsync(Guid userId)
-        {
-            return await _context.RecurringTransactions
-                .Where(rt => rt.UserId == userId)
-                .OrderByDescending(rt => rt.CreatedAt)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<RecurringTransaction>> GetActiveByUserIdAsync(Guid userId)
-        {
-            return await _context.RecurringTransactions
-                .Where(rt => rt.UserId == userId && rt.IsActive)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<RecurringTransaction>> GetDueTransactionsAsync()
-        {
-            var today = DateTime.UtcNow.Date;
-            return await _context.RecurringTransactions
-                .Where(rt => rt.IsActive && rt.NextExecutionDate.Date <= today)
-                .ToListAsync();
-        }
-
-        public async Task AddAsync(RecurringTransaction recurringTransaction)
-        {
-            await _context.RecurringTransactions.AddAsync(recurringTransaction);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(RecurringTransaction recurringTransaction)
-        {
-            _context.RecurringTransactions.Update(recurringTransaction);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var recurringTransaction = await _context.RecurringTransactions.FindAsync(id);
-            if (recurringTransaction != null)
-            {
-                _context.RecurringTransactions.Remove(recurringTransaction);
-                await _context.SaveChangesAsync();
-            }
-        }
-    }
-
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly ApplicationDbContext _context;

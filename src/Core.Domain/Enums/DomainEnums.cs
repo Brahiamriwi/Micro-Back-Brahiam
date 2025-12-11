@@ -29,19 +29,4 @@ namespace Core.Domain.Enums
         Monthly,
         Yearly
     }
-
-    public enum RecurrenceFrequency
-    {
-        Daily,
-        Weekly,
-        Monthly,
-        Yearly
-    }
-
-    public enum PaymentStatus
-    {
-        Pending,    // Pendiente de pago
-        Paid,       // Ya pagado este período
-        Overdue     // Vencido (pasó la fecha y no se pagó)
-    }
 }

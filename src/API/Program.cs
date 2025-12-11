@@ -50,14 +50,12 @@ try
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
     builder.Services.AddScoped<IFinancialRuleRepository, FinancialRuleRepository>();
-    builder.Services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
     builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     builder.Services.AddScoped<ITelegramLinkCodeRepository, TelegramLinkCodeRepository>();
 
     // Dependency Injection - Services
     builder.Services.AddScoped<ISpendingValidationService, SpendingValidationService>();
     builder.Services.AddScoped<ITransactionService, TransactionService>();
-    builder.Services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITelegramService, TelegramService>();
