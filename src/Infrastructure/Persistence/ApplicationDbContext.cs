@@ -13,7 +13,6 @@ namespace Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<FinancialRule> FinancialRules { get; set; }
-        public DbSet<RecurringTransaction> RecurringTransactions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<TelegramLinkCode> TelegramLinkCodes { get; set; }
 
@@ -69,24 +68,6 @@ namespace Infrastructure.Persistence
 
                 entity.HasIndex(e => e.UserId);
                 entity.HasIndex(e => new { e.UserId, e.IsActive });
-            });
-
-            modelBuilder.Entity<RecurringTransaction>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
-                entity.Property(e => e.Category).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Type).HasConversion<string>();
-                entity.Property(e => e.Frequency).HasConversion<string>();
-
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.RecurringTransactions)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasIndex(e => e.UserId);
-                entity.HasIndex(e => new { e.IsActive, e.NextExecutionDate });
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>

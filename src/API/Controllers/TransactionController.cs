@@ -64,8 +64,20 @@ namespace API.Controllers
         {
             try
             {
-                var userGuid = Guid.Parse(userId);
-                
+                Guid userGuid;
+
+                // Try to parse as GUID first, if fails, treat as email
+                if (!Guid.TryParse(userId, out userGuid))
+                {
+                    // userId is an email, find the user
+                    var user = await _userRepository.GetByEmailAsync(userId);
+                    if (user == null)
+                    {
+                        return NotFound(new { error = $"User with email '{userId}' not found" });
+                    }
+                    userGuid = user.Id;
+                }
+
                 // Parse type parameter if provided
                 TransactionType? transactionType = null;
                 if (!string.IsNullOrEmpty(type))
@@ -144,9 +156,8 @@ namespace API.Controllers
                 user.UpdateBalance(balanceChange);
                 await _userRepository.UpdateAsync(user);
 
-                // TODO: Implement DeleteAsync in ITransactionRepository
-                // For now, we assume the repo will be updated or this logic is handled elsewhere
-                // await _transactionRepository.DeleteAsync(transactionGuid); 
+                // Delete the transaction from the database
+                await _transactionRepository.DeleteAsync(transactionGuid);
 
                 return Ok(new { message = "Transaction deleted and balance reverted successfully" });
             }
