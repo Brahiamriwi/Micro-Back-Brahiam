@@ -14,14 +14,12 @@ namespace Core.Domain.Entities
         public ICollection<Transaction> Transactions { get; private set; }
         public ICollection<FinancialRule> FinancialRules { get; private set; }
         public ICollection<RefreshToken> RefreshTokens { get; private set; }
-        public ICollection<RecurringTransaction> RecurringTransactions { get; private set; }
 
         private User() 
         {
             Transactions = new List<Transaction>();
             FinancialRules = new List<FinancialRule>();
             RefreshTokens = new List<RefreshToken>();
-            RecurringTransactions = new List<RecurringTransaction>();
         }
 
         public User(string name, string email, string phoneNumber, decimal initialBalance = 0, string? passwordHash = null)
@@ -34,7 +32,6 @@ namespace Core.Domain.Entities
             Transactions = new List<Transaction>();
             FinancialRules = new List<FinancialRule>();
             RefreshTokens = new List<RefreshToken>();
-            RecurringTransactions = new List<RecurringTransaction>();
         }
 
         public void UpdateBalance(decimal amount)

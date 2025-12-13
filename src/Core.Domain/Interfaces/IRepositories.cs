@@ -36,17 +36,6 @@ namespace Core.Domain.Interfaces
         Task DeleteAsync(Guid id);
     }
 
-    public interface IRecurringTransactionRepository
-    {
-        Task<RecurringTransaction?> GetByIdAsync(Guid id);
-        Task<IEnumerable<RecurringTransaction>> GetByUserIdAsync(Guid userId);
-        Task<IEnumerable<RecurringTransaction>> GetActiveByUserIdAsync(Guid userId);
-        Task<IEnumerable<RecurringTransaction>> GetDueTransactionsAsync();
-        Task AddAsync(RecurringTransaction recurringTransaction);
-        Task UpdateAsync(RecurringTransaction recurringTransaction);
-        Task DeleteAsync(Guid id);
-    }
-
     public interface IRefreshTokenRepository
     {
         Task<RefreshToken?> GetByIdAsync(Guid id);

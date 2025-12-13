@@ -121,61 +121,6 @@ namespace Core.Application.DTOs
     }
 
     /// <summary>
-    /// Request to create a recurring transaction
-    /// </summary>
-    public class CreateRecurringTransactionRequest
-    {
-        [Required]
-        public string UserId { get; set; }
-        
-        [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
-        public decimal Amount { get; set; }
-        
-        [Required]
-        public TransactionType Type { get; set; }
-        
-        [Required]
-        [StringLength(100)]
-        public string Category { get; set; }
-        
-        [StringLength(500)]
-        public string Description { get; set; }
-        
-        [Required]
-        public RecurrenceFrequency Frequency { get; set; }
-        
-        [Required]
-        public DateTime StartDate { get; set; }
-        
-        public DateTime? EndDate { get; set; }
-        
-        [Range(1, 31)]
-        public int? DayOfMonth { get; set; }
-        
-        [Range(0, 6)]
-        public int? DayOfWeek { get; set; }
-    }
-
-    /// <summary>
-    /// Response for monthly cashflow
-    /// </summary>
-    public class CashflowResponse
-    {
-        public decimal TotalMonthlyIncome { get; set; }
-        public decimal TotalMonthlyExpenses { get; set; }
-        public decimal NetMonthlyCashflow { get; set; }
-        public IEnumerable<CashflowItem> IncomeBreakdown { get; set; }
-        public IEnumerable<CashflowItem> ExpenseBreakdown { get; set; }
-    }
-
-    public class CashflowItem
-    {
-        public string Category { get; set; }
-        public decimal Amount { get; set; }
-    }
-
-    /// <summary>
     /// Request for user registration
     /// </summary>
     public class RegisterRequest
@@ -261,24 +206,21 @@ namespace Core.Application.DTOs
     }
 
     /// <summary>
-    /// Request to update a recurring transaction
+    /// Response for financial rule progress/budget tracking
+    /// Shows how much has been spent in the rule's period and how much is remaining
     /// </summary>
-    public class UpdateRecurringTransactionRequest
+    public class RuleProgressResponse
     {
-        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
-        public decimal? Amount { get; set; }
-        
-        [StringLength(500)]
-        public string Description { get; set; }
-        
-        public DateTime? EndDate { get; set; }
-    }
-
-    /// <summary>
-    /// Request to toggle recurring transaction status
-    /// </summary>
-    public class ToggleRecurringTransactionRequest
-    {
-        public bool IsActive { get; set; }
+        public Guid RuleId { get; set; }
+        public string Category { get; set; }
+        public string Period { get; set; }
+        public decimal Limit { get; set; }
+        public decimal Spent { get; set; }
+        public decimal Remaining { get; set; }
+        public double PercentUsed { get; set; }
+        public DateTime PeriodStartDate { get; set; }
+        public DateTime PeriodEndDate { get; set; }
+        public bool IsOverBudget { get; set; }
+        public string Status { get; set; } // "On Track", "Warning", "Over Budget"
     }
 }

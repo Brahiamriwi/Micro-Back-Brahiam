@@ -31,20 +31,6 @@ namespace Core.Application.Interfaces
         Task<SpendingValidationResponse> ValidateSpendingAsync(SpendingValidationRequest request);
     }
 
-    public interface IRecurringTransactionService
-    {
-        Task<RecurringTransaction> CreateAsync(CreateRecurringTransactionRequest request);
-        Task<IEnumerable<RecurringTransaction>> GetByUserIdAsync(Guid userId);
-        Task<IEnumerable<RecurringTransaction>> GetActiveByUserIdAsync(Guid userId);
-        Task<CashflowResponse> GetCashflowAsync(Guid userId);
-        Task UpdateAsync(Guid id, decimal? amount, string description, DateTime? endDate);
-        Task ToggleActiveAsync(Guid id, bool isActive);
-        Task DeleteAsync(Guid id);
-        Task ProcessDueTransactionsAsync();
-        Task MarkAsPaidAsync(Guid id);
-        Task<IEnumerable<RecurringTransaction>> GetUpcomingAsync(Guid userId, int days = 3);
-    }
-
     public interface ITelegramService
     {
         Task<GenerateTelegramLinkResponse> GenerateLinkAsync(Guid userId);
