@@ -94,6 +94,12 @@ try
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+            // Use resolver to handle tokens with or without 'kid' header
+            IssuerSigningKeyResolver = (token, securityToken, kid, validationParameters) =>
+            {
+                // Always return the configured key, regardless of 'kid' value
+                return new[] { new SymmetricSecurityKey(secretKey) };
+            },
             ValidateIssuer = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidateAudience = true,
