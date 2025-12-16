@@ -19,6 +19,9 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .CreateLogger();
 
+// Configurar Npgsql para manejar correctamente timestamps con zona horaria
+//AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 try
 {
     Log.Information("Starting MS Core API");

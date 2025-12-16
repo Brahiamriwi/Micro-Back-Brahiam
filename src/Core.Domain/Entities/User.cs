@@ -10,6 +10,10 @@ namespace Core.Domain.Entities
         public string PhoneNumber { get; private set; } = string.Empty;
         public decimal CurrentBalance { get; private set; }
         public string? PasswordHash { get; private set; }
+        
+        // OAuth2 Provider fields - set by Spring Boot authentication
+        public string? Provider { get; private set; }
+        public string? ProviderId { get; private set; }
 
         public ICollection<Transaction> Transactions { get; private set; }
         public ICollection<FinancialRule> FinancialRules { get; private set; }
