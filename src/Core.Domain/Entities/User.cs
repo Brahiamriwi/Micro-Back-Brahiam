@@ -7,7 +7,7 @@ namespace Core.Domain.Entities
     {
         public string Name { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
-        public string PhoneNumber { get; private set; } = string.Empty;
+        public string? PhoneNumber { get; private set; }
         public decimal CurrentBalance { get; private set; }
         public string? PasswordHash { get; private set; }
         
@@ -26,7 +26,7 @@ namespace Core.Domain.Entities
             RefreshTokens = new List<RefreshToken>();
         }
 
-        public User(string name, string email, string phoneNumber, decimal initialBalance = 0, string? passwordHash = null)
+        public User(string name, string email, string? phoneNumber, decimal initialBalance = 0, string? passwordHash = null)
         {
             Name = name;
             Email = email;
